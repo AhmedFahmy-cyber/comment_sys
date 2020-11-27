@@ -1,9 +1,14 @@
 from django.shortcuts import render, get_object_or_404 , HttpResponseRedirect 
 from .models import Post , Category
-from .forms import CommentForm
+from .forms import CommentForm , FormSearch
 from django.views.generic import ListView
+from django.db.models import Q
+
 
 # Create your views here.
+
+    
+    
 
 def home(request):
 
@@ -34,13 +39,12 @@ def post_single( request, post):
         comment_form = CommentForm ()
     return render(request, 
     'single.html', 
-    {
+    {         
         'post' : post ,
         'comment_form':comment_form ,
         'comments':comments ,
         },
     )
-
 class CategoryListView(ListView):
 
     template_name = 'category.html'
@@ -67,3 +71,38 @@ def category_list(request):
     }
 
     return context
+
+
+
+
+def search(request):
+    
+    form = FormSearch()
+    
+    results = []
+    
+    q = ''
+    c = ''
+    query = Q()
+    form =FormSearch(request.GET)
+    if "q" in request.GET and form.is_valid():
+        
+        q = form.cleaned_data['q']
+        c = form.cleaned_data['c']
+        if c is not None:
+            query &=Q(category=c)
+        if q is not None:
+            query &=Q(title__contains=q)    
+            
+        results = Post.objects.filter(
+                   query
+           )
+        
+            
+        
+    return render (request , 'search.html' , {
+        
+        'form': form , 
+        'q' : q , 
+        'results' : results , 
+    })            

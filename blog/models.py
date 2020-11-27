@@ -6,6 +6,15 @@ from django.utils.text import slugify
 # Create your models here.
 
 
+def user_directory_path(instanse ,filename ):
+    
+    return "posts/{0}/{1}".format(instanse.id,filename)
+
+def user_direc_day_path(instanse ,filename ):
+    
+    return "posts/%Y/%m/%d".format(instanse.id,filename)
+
+
 class Category(models.Model):
 
     name = models.CharField(max_length=50)
@@ -29,6 +38,7 @@ class Post (models.Model):
     excerpt = models.TextField(null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT , default= 1)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
+    image = models.ImageField(upload_to = 'posts/', default = 'posts/default.jpg')
     publish = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey (User, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
