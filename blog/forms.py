@@ -1,0 +1,22 @@
+from django import forms
+
+from .models import Comment
+
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Comment 
+
+        fields = ( 'name' ,'email' , 'content')
+
+            
+        widgets  = {
+
+
+            "name": forms.TextInput(attrs={'class': 'col-sm-12'}),
+            "email": forms.TextInput(attrs={'class': 'col-sm-12' , 'placeholder' :'Enter your email'} ),
+            "content": forms.Textarea(attrs={'class': 'form-control'  , 'placeholder' :'Enter your comment'}),
+        }

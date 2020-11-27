@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{post.title}}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row justify-content-md-center pt-5">
+
+    <div class="col-md-8">
+
+      <div class="col-12">
+        <h1>{{post.title}}</h1>
+      </div>
+      <div class="col-12">
+        <p>{{post.content|safe}}</p>
+      </div>
+      <div class="col-12">
+        {% with   comments.count as comments_total %}
+        <h2>{{comments_total}} comment {{comment_total|pluralize}}</h2>
+        {% endwith %}
+        {% for comment in comments %}
+        Comment {{foreloop.counter}} by {{comment.name}}
+        on {{comment.publish}}
+        {{comment.content|linebreaks}}
+        {% empty %}
+        <p> No commrent yet...</p>
+        {% endfor%}
+        <h2>Add comment .....</h2>
+
+        <form id='comform' method="post">
+          {% csrf_token %}
+          {{comment_form.as_p}}
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block">submit</button>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+{% endblock %}
